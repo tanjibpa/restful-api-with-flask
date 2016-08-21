@@ -2,6 +2,7 @@ import os
 import httplib2
 import json
 import unittest
+
 from models import Restaurant, Base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
