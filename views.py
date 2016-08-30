@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, abort, g, render_template, make_response
+from flask import Flask, request, jsonify, abort, g, render_template, make_response, Response, redirect, url_for
+from flask import session as flask_session
 from findRestaurant import findRestaurants
 from geocode import getGeocodeLocation
 from models import Base, Restaurant, User
@@ -9,6 +10,7 @@ import json
 import os
 import httplib2
 import requests
+from functools import wraps
 
 from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
@@ -33,19 +35,36 @@ def verify_password(username_or_token, password):
     return True
 
 
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not verify_password(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
 @app.route('/clientOAuth')
 def start():
     return render_template('oauthclient.html')
 
 
-@app.route('dashboard')
-@auth.login_required
+@app.route('/dashboard')
 def user_dashboard():
-    return render_template('')
+    return render_template('dashboard.html')
 
 
 @app.route('/oauth/<string:provider>', methods=['POST'])
 def login(provider):
+    # auth_code = request.json.get('code')
     auth_code = request.json.get('code')
     if provider == 'google':
         try:
@@ -53,7 +72,7 @@ def login(provider):
                 client_id='850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com',
                 client_secret='tcG9arN1iKntz7PQ86vWepCb',
                 scope='profile email',
-                redirect_uris='http://localhost:5000/test')
+                redirect_uri='http://localhost:5000/dashboard')
             oauth_flow.redirect_uri = 'postmessage'
             credentials = oauth_flow.step2_exchange(auth_code)
         except client.FlowExchangeError:
@@ -84,10 +103,12 @@ def login(provider):
 
         token = user.generate_auth_token()
         return jsonify({ 'token': token.decode('ascii') })
-        # return token
+        # flask_session['name'] = name
+        # flask_session['token'] = token
+        # return redirect(url_for('user_dashboard', name=name, token=token.decode('utf-8')))
     else:
-        return 'Unrecognized provider'
-
+        # return 'Unrecognized provider'
+        return False
 
 @app.route('/token')
 @auth.login_required

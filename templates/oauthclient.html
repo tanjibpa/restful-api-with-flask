@@ -29,6 +29,12 @@
                 auth2 = gapi.auth2.init({
                     client_id: '850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com',
                 });
+//                var auth = gapi.auth2.getAuthInstance();
+//                auth.isSignedIn.get().then(window.location = "http://localhost:5000/dashboard");
+//                auth2.isSignedIn.get().then(window.location = "http://localhost:5000/dashboard");
+//                if (auth2.isSignedIn.get()) {
+//                    window.location = "http://localhost:5000/dashboard";
+//                }
             })
         </script>
 {% endblock %}
@@ -73,11 +79,11 @@
 
                 <script>
                     function signInCallback(json) {
-                      console.log('Inside callback function');
-                      console.log(json);
-                      authResult = json;
-                      if (authResult['code']) {
-                        $('#signinButton').attr('style', 'display: none');
+                         console.log('Inside callback function');
+                         console.log(json);
+                         authResult = json;
+                         if (authResult['code']) {
+                             $('.signinButton').attr('style', 'display: none');
                         $('#result').html('One-time auth code: '+authResult['code']);
                         $.ajax({
                           type: 'POST',
@@ -87,7 +93,7 @@
                           data: JSON.stringify(authResult),
                           success: function(result) {
                             if (result) {
-                              $('#result').html('Login successful!<br>'+JSON.stringify(result)+ '');
+                                $('#result').html('Login successful!<br>'+JSON.stringify(result)+ '');
                             } else if (authResult['error']) {
                               console.log('There was an error: ' + authResult['error']);
                             } else {

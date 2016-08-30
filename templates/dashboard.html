@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script>
+        gapi.load('auth2', function () {
+            auth2 = gapi.auth2.init({
+                client_id: '850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com',
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <!--<h2>Hello {{ name }}!</h2>-->
+    <!--<textarea name="" id="" cols="30" rows="3">{{ token }}</textarea>-->
+    <p>DASHBOARD</p>
 
-</body>
-</html>
+    <a href="#" onclick="signOut();">Sign out</a>
+    <script>
+        function signOut() {
+          auth2.signOut().then(function () {
+            console.log('User signed out.');
+            window.location = "http://localhost:5000/clientOAuth";
+          });
+        }
+    </script>
+{% endblock %}
