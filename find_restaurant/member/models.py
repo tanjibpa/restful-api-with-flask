@@ -1,12 +1,10 @@
 import os
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import(TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 import random, string
-
-Base = declarative_base()
+from find_restaurant import app, Base
 secret_key = ''.join(random.choice(string.ascii_uppercase+string.digits) for x in range(32))
 
 
@@ -42,32 +40,13 @@ class User(Base):
         return user_id
 
 
-class Restaurant(Base):
-    __tablename__ = 'restaurant'
+class UserPref(Base):
+    __tablename__ = 'user_pref'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    restaurant_id= Column(String(80))
-    address = Column(String(250))
-    rating = Column(String(10))
-    types = Column(String(250))
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True, nullable=False)
+    # user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    api_key = Column(String)
+    user = relationship(User)
 
-    def restaurantId(self):
-        return self.restaurant_id
-
-    @property
-    def serialize(self):
-        return {
-            'id': self.id,
-            'restaurant_id': self.restaurant_id,
-            'restaurant_name': self.name,
-            'address': self.address,
-            'rating': self.rating,
-            'types': self.types
-        }
-
-# engine = create_engine('sqlite:///restaurants.db')
-engine = create_engine(os.environ['DATABASE_URI'])
-Base.metadata.create_all(engine)
-
-
+    def generate_api_key(self):
+        self.api_key = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(32))

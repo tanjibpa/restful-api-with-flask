@@ -1,9 +1,10 @@
 import httplib2
 import json
 import os
-
-GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
-
+from flask import current_app as app
+from config import GOOGLE_API_KEY
+# GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
+# GOOGLE_API_KEY = app.config['GOOGLE_API_KEY']
 
 def getGeocodeLocation(inputString):
     locationString = inputString.replace(" ", "+")

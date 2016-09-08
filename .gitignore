@@ -3,3 +3,4 @@
 *.pyc
 .env
 ex.py
+/__pycache__

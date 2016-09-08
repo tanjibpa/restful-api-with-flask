@@ -1,0 +1,95 @@
+{% if session.user_id %}
+    <script>window.location="http://localhost:5000/user"</script>
+{% endif %}
+{% extends "base.html" %}
+{% block title %}Login with OAuth{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+    <script>
+        function renderButton() {
+            gapi.signin2.render('my-signin2', {
+                'width': 240,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark'
+//                'onsuccess': signInCallback,
+//                'onfailure': onFailure
+            });
+        }
+        function onFailure(error) {
+            console.log(error);
+        }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton"></script>
+    <meta name="google-signin-client_id" content="850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com">
+
+    <script>
+        gapi.load('auth2', function () {
+            auth2 = gapi.auth2.init({
+                client_id: '850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com',
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4">
+            <div class="in-middle">
+                <div class="row banner menu">
+                    <div class="col-md-11 col-md-offset-1 padding-none">
+                        <h3>Login with OAuth 2.0 </h3>
+                    </div>
+                </div>
+                <div id="result"></div>
+                <div id="my-signin2" class="signinButton"></div>
+                <script>
+                    $('.signinButton').click(function() {
+                        auth2.grantOfflineAccess({'redirect_uri': 'postmessage'}).then(signInCallback);
+                    });
+                </script>
+                <script>
+                    function onSuccess(googleUser) {
+                        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                        console.log(auth2.isSignedIn.get());
+                        if (auth2.isSignedIn.get() == 'true') {
+                            $('.signOutButton').attr('style', 'display: none');
+                        }
+                        else {
+                            $('.signout').html('<a class="signOutButton" href="#" onclick="signOut();">Sign out</a>');
+                        }
+                    }
+                    function onFailure(error) {
+                        console.log(error);
+                    }
+
+                </script>
+
+                <script>
+                    function signInCallback(json) {
+                         console.log('Inside callback function');
+                        console.log(auth2.isSignedIn.get());
+                        console.log(json);
+                         authResult = json;
+                         if (authResult['code']) {
+                             $('.signinButton').attr('style', 'display: none');
+                             $('#result').html('Redirecting....');
+                             $.ajax({
+                                 type: 'POST',
+                                 url: '/oauth/google',
+                                 processData: false,
+                                 contentType: 'application/json; charset=utf-8',
+                                 data: JSON.stringify(authResult),
+                                 success: function (result) {
+                                    window.location = result;
+                                 }
+                             });
+                      }
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="result"></div>
+		<script>
+			$.ajax({
+				type: 'GET',
+				url: "/ajaxcall",
+				contentType: 'application/json; charset=utf-8',
+				success: function(result) {
+					$('#result').html("<p>"+ result +"</p>");
+				}
+			})
+		</script>
+	</body>
+</html>

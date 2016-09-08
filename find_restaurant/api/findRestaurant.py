@@ -1,6 +1,7 @@
 import httplib2
 import json
-from geocode import getGeocodeLocation, GOOGLE_API_KEY
+from find_restaurant.api.geocode import getGeocodeLocation
+from config import GOOGLE_API_KEY
 
 
 def findRestaurants(lat, long):

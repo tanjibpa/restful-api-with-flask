@@ -3,7 +3,7 @@ import httplib2
 import json
 import unittest
 
-from models import Restaurant, Base
+from models_back import Restaurant, Base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 

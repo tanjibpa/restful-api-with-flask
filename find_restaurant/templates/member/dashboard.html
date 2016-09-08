@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script>
+        gapi.load('auth2', function () {
+            auth2 = gapi.auth2.init({
+                client_id: '850414830066-0s13h14gti05jectsabuke1vp6io68ct.apps.googleusercontent.com',
+            });
+        });
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+{% endblock %}
+{% block content %}
+    <a href="/logout" onclick="signOut();">Logout</a>
+    <h2>Hello {{ name }}!</h2>
+    <p>EMAIL: {{ email }}</p>
+    <p>Api key: <textarea readonly rows="1" cols="40">{{ api_key }}</textarea></p>
+    <img src="{{ picture }}">
+{% endblock %}
