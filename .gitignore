@@ -4,3 +4,4 @@
 .env
 ex.py
 /__pycache__
+*.swp
