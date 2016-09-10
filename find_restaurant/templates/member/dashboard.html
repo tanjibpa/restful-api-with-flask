@@ -20,6 +20,7 @@
     <a href="/logout" onclick="signOut();">Logout</a>
     <h2>Hello {{ name }}!</h2>
     <p>EMAIL: {{ email }}</p>
-    <p>Api key: <textarea readonly rows="1" cols="40">{{ api_key }}</textarea></p>
-    <img src="{{ picture }}">
+    <!-- <p>Api key: <textarea readonly rows="1" cols="40">{{ api_key }}</textarea></p> -->
+    <input class="form-control" id="disabledInput" placeholder="{{ api_key }}" type="text">
+    <!-- <img src="{{ picture }}"> -->
 {% endblock %}

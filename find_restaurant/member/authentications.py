@@ -34,4 +34,3 @@ def google_login(auth_code):
         return json.dumps({'error': 'Failed to upgrade the authorization code.'})
     access_token = credentials.access_token
     return access_token
-

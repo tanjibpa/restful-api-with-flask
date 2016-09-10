@@ -64,7 +64,6 @@ def editARestaurant(restaurant_info):
                 print(i)
                 if i not in restaurant.properties():
                     return jsonify(Restaurant = {"error" : "%s is not a restaurant property." % i})
-                # restaurant[i] = restaurant_info[i]
                 setattr(restaurant, i, restaurant_info[i])
                 dbsession.commit()
                 print("%s added" % i)
