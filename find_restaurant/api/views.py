@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from find_restaurant.api.findRestaurant import getGeocodeLocation
-from find_restaurant.api.query import editARestaurant, addRestaurant, getARestaurant, getAllRestaurants, deleteRestaurant, check_api_key
+from find_restaurant.api.query import editARestaurant, addARestaurant, getARestaurant, getAllRestaurants, deleteRestaurant, check_api_key
 from find_restaurant import dbsession
 from find_restaurant.member.models import UserPref
 import json
@@ -22,6 +22,12 @@ def loadRestaurants():
         return getAllRestaurants()
 
 
+@api.route('/restaurant/add', methods=['POST'])
+def addRestaurant():
+    restaurant_info = request.get_json()
+    return addARestaurant(restaurant_info)
+
+
 @api.route('/restaurant/<string:restaurant_id>', methods=['GET', 'DELETE'])
 @check_api_key
 def getRestaurant(restaurant_id):
@@ -33,8 +39,6 @@ def getRestaurant(restaurant_id):
 @api.route('/restaurant/edit', methods=['PUT'])
 @check_api_key
 def editRestaurant():
-    if request.method == 'PUT':
-        restaurant_info = request.get_json()
-        print(request.get_json())
-        data = editARestaurant(restaurant_info)
-        return data
+    restaurant_info = request.get_json()
+    data = editARestaurant(restaurant_info)
+    return data

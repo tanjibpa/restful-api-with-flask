@@ -25,20 +25,24 @@ def getARestaurant(restaurant_id):
     return jsonify(Restaurant = restaurant.serialize)
 
 
-def addRestaurant(restaurant_info):
-    if not dbsession.query(Restaurant).filter_by(restaurant_id=restaurant_info['place_id']).first():
-        try:
-            if restaurant_info['rating']:
-                rating = restaurant_info['rating']
-        except:
-           rating = 0
-        restaurant = Restaurant(name=restaurant_info['name'],
-                                restaurant_id=restaurant_info['place_id'],
-                                address=restaurant_info['vicinity'],
-                                rating=str(rating),
-                                types=', '.join([i for i in restaurant_info['types']]))
-        dbsession.add(restaurant)
-        dbsession.commit()
+def addARestaurant(restaurant_info):
+    try:
+        if not dbsession.query(Restaurant).filter_by(restaurant_id=restaurant_info['place_id']).first():
+            try:
+                if restaurant_info['rating']:
+                    rating = restaurant_info['rating']
+            except:
+               rating = 0
+            restaurant = Restaurant(name=restaurant_info['name'],
+                                    restaurant_id=restaurant_info['place_id'],
+                                    address=restaurant_info['vicinity'],
+                                    rating=str(rating),
+                                    types=', '.join([i for i in restaurant_info['types']]))
+            dbsession.add(restaurant)
+            dbsession.commit()
+            return jsonify(Restaurant = {"success": "Restaurant with ID: %s successfully added."})
+    except KeyError:
+        return jsonify(Restaurant = {"error": "key doesn't macth."})
 
 
 def deleteRestaurant(restaurant_id):
