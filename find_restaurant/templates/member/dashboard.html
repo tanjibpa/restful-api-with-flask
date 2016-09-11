@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css')}}">
     <script src="https://apis.google.com/js/platform.js"></script>
     <script>
         gapi.load('auth2', function () {
@@ -17,10 +18,42 @@
     </script>
 {% endblock %}
 {% block content %}
-    <a href="/logout" onclick="signOut();">Logout</a>
-    <h2>Hello {{ name }}!</h2>
-    <p>EMAIL: {{ email }}</p>
-    <!-- <p>Api key: <textarea readonly rows="1" cols="40">{{ api_key }}</textarea></p> -->
-    <input class="form-control" id="disabledInput" placeholder="{{ api_key }}" type="text">
-    <!-- <img src="{{ picture }}"> -->
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">API Dashboard</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Restaurant API</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Home</a></li>
+            <li><a href="/logout" onclick="signOut()">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="user-area">
+        <h2>Hello {{ name }}!</h2>
+        <p>Email: {{ email }}</p>
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Your API key</label>
+            <div class="col-sm-6">
+              <p>{{ api_key }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- <p>Api key: <textarea readonly rows="1" cols="40">{{ api_key }}</textarea></p> -->
+        <!-- <input class="form-control" id="disabledInput" placeholder="{{ api_key }}" type="text"> -->
+        <!-- <img src="{{ picture }}"> -->
+      </div>
+    </div>
 {% endblock %}

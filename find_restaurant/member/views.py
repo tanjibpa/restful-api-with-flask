@@ -9,7 +9,7 @@ import requests
 
 members = Blueprint('members', __name__, template_folder='templates', static_folder='static')
 
-@members.route('/clientOAuth')
+@members.route('/')
 def start():
     return render_template('member/oauthclient.html')
 
